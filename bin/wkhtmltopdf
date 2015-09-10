@@ -9,15 +9,13 @@
 
 require 'rbconfig'
 
-suffix = case RbConfig::CONFIG['host']
+case RbConfig::CONFIG['host']
 when /x86_64.*linux/
-  'linux_amd64'
-when /linux/
-  'linux_x86'
+  gem_root =  File.dirname(__FILE__) + '/..'
+  system("#{gem_root}/linux_amd64/bin/wkhtmltopdf #{ARGV.join(' ')}")
 when /darwin/
   'darwin_x86'
+  system *$*.unshift("#{__FILE__}_#{suffix}")
 else
   raise "Invalid platform. Must be running on linux or intel-based Mac OS."
 end
-
-system *$*.unshift("#{__FILE__}_#{suffix}")
